@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Yates</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_home_page">HomePage</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_upload">Upload</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_matatu_track">MatatuTrack</string>
+    <string name="title_activity_rate_ma3">Ma3Gani</string>
+
+    <string name="symbolic_tick_prb_caption">ProperRatingBar with symbolic tick:</string>
+    <string name="drawable_tick_prb_caption">ProperRatingBar with drawable tick, with attached listener, clickable:</string>
+    <string name="switch_tick_button_caption">Switch tick</string>
+    <string name="get_rating_button_caption">Get rating</string>
+    <string name="set_rating_button_caption">Set rating to \'2\'</string>
+    <string name="set_rating_snack_caption">Rating was set to \'2\'</string>
+    <string name="get_rating_snack_caption_format">Current rating = \'%d\'</string>
+    <string name="rating_listener_snack_caption">RatingListener: current rating = \'%d\'</string>
+    <string name="q1">on the below scale, rate your sacco in term of safety</string>
+    <string name="title_activity_post_comment">Post Comment</string>
+</resources>
