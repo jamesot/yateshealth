@@ -52,4 +52,9 @@
     <color name="theme_accent_1">@color/md_light_blue_900</color>
     <color name="md_light_blue_900">#01579b</color>
     <color name="body_text_1">#de000000</color>
+
+    <color name="name">#A4A4A4</color>
+    <color name="value">#868686</color>
+    <color name="yatesgreen">#037A3A</color>
+    <color name="yatesyellow">#E3DA01</color>
 </resources>

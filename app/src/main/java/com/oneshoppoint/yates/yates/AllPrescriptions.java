@@ -27,6 +27,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.StringRequest;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.oneshoppoint.yates.yates.Model.ItemDetails;
+import com.oneshoppoint.yates.yates.Model.Prescriptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,13 +45,14 @@ import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.CardThumbnail;
 import it.gmariotti.cardslib.library.internal.base.BaseCard;
 import it.gmariotti.cardslib.library.view.CardGridView;
+import it.gmariotti.cardslib.library.view.CardViewNative;
 
 import static com.oneshoppoint.yates.yates.R.drawable.circle;
 
 /**
  * Created by stephineosoro on 31/05/16.
  */
-public class ShowPatients extends AppCompatActivity {
+public class AllPrescriptions extends AppCompatActivity {
     protected ScrollView mScrollView;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -57,24 +60,26 @@ public class ShowPatients extends AppCompatActivity {
     JSONArray res = null;
     private static final int ITEM_COUNT = 100;
     ImageLoader imageLoader;
-    private String ID;
     static CardGridArrayAdapter mCardArrayAdapter;
     protected ArrayList<Card> cards = new ArrayList<Card>();
+    BaseCard removedcard;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show_patient);
+        setContentView(R.layout.activity_show_prescriptions);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Patients");
-        GetData();
+        setTitle("Prescriptions");
+        getPrescription();
 
         final FloatingActionButton actionA = (FloatingActionButton) findViewById(R.id.action_a);
         actionA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionA.setTitle("Add a Patient");
-                Intent intent = new Intent(getApplicationContext(), CreatePatient.class);
+                actionA.setTitle("Add a Prescription");
+                Intent intent = new Intent(getApplicationContext(), CreatePrescription.class);
+                intent.putExtra("ID", getIntent().getStringExtra("ID"));
                 startActivity(intent);
 
             }
@@ -96,6 +101,7 @@ public class ShowPatients extends AppCompatActivity {
 
         public GplayGridCard(Context context) {
             super(context, R.layout.inner_content_detail);
+
         }
 
 
@@ -111,20 +117,29 @@ public class ShowPatients extends AppCompatActivity {
 
             CardHeader header = new CardHeader(getContext());
             header.setButtonOverflowVisible(true);
-            header.setTitle(headerTitle);
+            header.setTitle(headerTitle + " (" + secondaryTitle + " )");
             header.setPopupMenu(R.menu.popupmain, new CardHeader.OnClickCardHeaderPopupMenuListener() {
                 @Override
                 public void onMenuItemClick(BaseCard card, MenuItem item) {
 //                    Toast.makeText(getContext(), "Item " + item.getTitle(), Toast.LENGTH_SHORT).show();
                     String selected = card.getId();
-                    Toast.makeText(getBaseContext(), "Patient deleted", Toast.LENGTH_LONG).show();
-//                    ID = card.getId();
-//                    if (mCardArrayAdapter != null) {
 
+                    if (card.getTitle().endsWith("undispensed")) {
+                        removedcard = card;
                         cards.remove(card); //It is an example.
                         mCardArrayAdapter.notifyDataSetChanged();
 //                    }
-                    Delete(selected);
+                        Delete(selected);
+                    }else{
+                        Toast.makeText(getContext(), "The prescription is already dispensed, can't be deleted", Toast.LENGTH_SHORT).show();
+                    }
+//                    SendPrescription(selected);
+
+//                    Toast.makeText(getBaseContext(), "Item ID is" + selected, Toast.LENGTH_LONG).show();
+                    /*Intent intent =new Intent(getBaseContext(),ProductDetail.class);
+                    intent.putExtra("id",selected);
+                    intent.putExtra("product_name",card.getTitle());
+                    startActivity(intent);*/
                 }
             });
 
@@ -175,29 +190,34 @@ public class ShowPatients extends AppCompatActivity {
 //            title.setText("I-shop");
 
             final TextView subtitle = (TextView) view.findViewById(R.id.carddemo_gplay_main_inner_subtitle);
+            subtitle.setText("Edit");
 //            subtitle.setText(secondaryTitle);
             subtitle.setClickable(true);
             subtitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    Intent intent = new Intent(getContext(), EditPatient.class);
+
+
+
+                    Intent intent = new Intent(getContext(), EditPrescription.class);
                     intent.putExtra("ID", getId());
+                    intent.putExtra("pID", getIntent().getStringExtra("ID"));
                     startActivity(intent);
-//                    getParentCard().getId();
-                    subtitle.getText();
+
                 }
             });
 
             final TextView subtitle2 = (TextView) view.findViewById(R.id.carddemo_gplay_main_inner_subtitle2);
 //            subtitle2.setText(secondaryTitle);
+            subtitle2.setText("Info");
             subtitle2.setClickable(true);
             subtitle2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
 //                    getParentCard().getId();
-                    Intent intent = new Intent(getContext(), AllPrescriptions.class);
+                    Intent intent = new Intent(getContext(), ShowEachPrescription.class);
                     intent.putExtra("ID", getId());
                     startActivity(intent);
                 }
@@ -268,7 +288,7 @@ public class ShowPatients extends AppCompatActivity {
                     JSONArray res = jObj.getJSONArray("data");
 
                     Log.e("result: ", res.toString());
-
+                    ArrayList<Card> cards = new ArrayList<Card>();
 
                     // looping through All res
                     for (int i = 0; i < res.length(); i++) {
@@ -291,7 +311,7 @@ public class ShowPatients extends AppCompatActivity {
 
                         GplayGridCard card = new GplayGridCard(getBaseContext());
 
-                        card.headerTitle = name + " " + c.getString("lastname");
+                        card.headerTitle = name;
                         card.secondaryTitle = c.getString("phoneNumber");
 //                    card.id = c.getString("price");
                         card.setId(c.getString("id"));
@@ -325,10 +345,10 @@ public class ShowPatients extends AppCompatActivity {
 
 //
                     }
-                    if (res.length() == 0) {
-                        Toast.makeText(getBaseContext(), "No prescriptions done for this patient!,add one by clicking the + button ", Toast.LENGTH_LONG).show();
-                    }
-                    mCardArrayAdapter = new CardGridArrayAdapter(getBaseContext(), cards);
+//                    if (res.length() == 0) {
+//                        Toast.makeText(getBaseContext(), "No products currently in this category,\n Explore other categories", Toast.LENGTH_LONG).show();
+//                    }
+                    CardGridArrayAdapter mCardArrayAdapter = new CardGridArrayAdapter(getBaseContext(), cards);
 
                     CardGridView listView = (CardGridView) findViewById(R.id.carddemo_grid_base1);
                     if (listView != null) {
@@ -339,6 +359,142 @@ public class ShowPatients extends AppCompatActivity {
                 } catch (JSONException e) {
                     // JSON error
                     e.printStackTrace();
+                    Toast.makeText(getBaseContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e("JSON ERROR", e.toString());
+                }
+            }
+
+
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("VolleyError", "Error: " + error.getMessage());
+//                hideProgressDialog();
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                setRetryPolicy(new DefaultRetryPolicy(5 * DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+                setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                String creds = String.format("%s:%s", "odhiamborobinson@hotmail.com", "powerpoint1994");
+                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                headers.put("Authorization", auth);
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+                Map<String, String> params = new HashMap<String, String>();
+//                Log.e("category id", getIntent().getStringExtra("category_id"));
+//                params.put("categoryId", 2 + "");
+
+
+                return params;
+            }
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+        Log.e("request is", strReq.toString());
+    }
+
+
+    private void getPrescription() {
+        Log.d("URL is", "https://www.oneshoppoint.com/api/prescription?patientId=" + getIntent().getStringExtra("ID"));
+        String tag_string_req = "req_Categories";
+        StringRequest strReq = new StringRequest(Request.Method.GET, "https://www.oneshoppoint.com/api/prescription?patientId=" + getIntent().getStringExtra("ID"), new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.e("Response from server is", response.toString());
+
+
+                String success = null;
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    JSONArray data = jObj.getJSONArray("data");
+
+
+//                    Log.e("result: ", prescriptions.toString());
+//                    ArrayList<Card> cards = new ArrayList<Card>();
+//
+//                    // looping through All res
+                    ArrayList<ItemDetails> results = new ArrayList<ItemDetails>();
+//                    ArrayList<Card> cards = new ArrayList<Card>();
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject c = data.getJSONObject(i);
+                        Log.e("Each data" + i, c.toString());
+                        JSONArray prescription = c.getJSONArray("prescriptionItems");
+                        Log.e("Prescription object", prescription.toString());
+                        for (int j = 0; j < prescription.length(); j++) {
+                            ItemDetails items = new ItemDetails();
+                            JSONObject d = prescription.getJSONObject(j);
+                            JSONObject inn = d.getJSONObject("inn");
+                            String name = inn.getString("name");
+                            String strength = d.getString("note");
+                            String dosageForm = d.getString("dosageForm");
+                            String frequencyQuantity = d.getString("frequencyQuantity");
+                            String frequencyPerDay = d.getString("frequencyPerDay");
+                            items.setName(name);
+                            items.setItemDescription(strength);
+                            items.setID(dosageForm);
+                            items.setQuantity(frequencyQuantity);
+                            items.setTotal(frequencyPerDay);
+                            String duration = d.getString("duration");
+                            String unit = d.getString("unit");
+                            items.setEmail(duration + " " + unit);
+                            results.add(items);
+
+                            Log.e("weeks", duration + " " + unit);
+                            Log.e("Each INN" + d + i, inn.toString());
+
+                            GplayGridCard card = new GplayGridCard(getBaseContext());
+
+                            card.headerTitle = name + " ";
+                            if (c.getString("dispensed").equals("true")) {
+                                card.secondaryTitle = "dispensed";
+                                Log.e("Dispensed", "dispensed");
+                            } else {
+                                card.secondaryTitle = "undispensed";
+                            }
+//                    card.id = c.getString("price");
+                            card.setId(c.getString("id"));
+//                    card.url = path;
+                            card.setTitle(name);
+                            card.init();
+                            cards.add(card);
+                        }
+
+                        // Storing each json item in variable
+
+//                        String name = c.getString("firstname");
+//                    String description = c.getString("description");
+                        //                                children1 = c.getJSONArray("children");
+//                        Log.e("CategoryFragment", name);
+
+
+                    }
+                    mCardArrayAdapter = new CardGridArrayAdapter(getBaseContext(), cards);
+
+                    CardGridView listView = (CardGridView) findViewById(R.id.carddemo_grid_base1);
+                    if (listView != null) {
+                        listView.setAdapter(mCardArrayAdapter);
+                    }
+
+
+//                    initCard(results, "Patient");
+                    if (jObj.getJSONArray("data").equals(false)) {
+                        Toast.makeText(getBaseContext(), "No prescription done for this patient", Toast.LENGTH_LONG).show();
+                    }
+
+
+                } catch (JSONException e) {
+                    // JSON error
+                    e.printStackTrace();
+                    Toast.makeText(getBaseContext(), "No prescription done for this patient", Toast.LENGTH_LONG).show();
 //                    Toast.makeText(getBaseContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     Log.e("JSON ERROR", e.toString());
                 }
@@ -384,7 +540,7 @@ public class ShowPatients extends AppCompatActivity {
 
     private void Delete(String ids) {
         String tag_string_req = "req_Categories";
-        StringRequest strReq = new StringRequest(Request.Method.DELETE, "https://www.oneshoppoint.com/api/patient?ids=" + ids, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.DELETE, "https://www.oneshoppoint.com/api/prescription?ids=" + ids, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.e("Response from server is", response.toString());
@@ -398,10 +554,16 @@ public class ShowPatients extends AppCompatActivity {
 //                        String regno = jObj.getString("regno");
 
                     String res = jObj.getString("status");
-                    if (res.equals("DELETED")){
+                    if (res.equals("DELETED")) {
                         Log.d("DELETE", "successfully deleted the patient");
-                    }
+                        Toast.makeText(getBaseContext(), "successfully deleted the prescription", Toast.LENGTH_LONG).show();
+                        mCardArrayAdapter.notifyDataSetChanged();
+                    } else {
+                        Log.d("DELETE", "unsuccessfully deleted the patient");
+                        //It is an example.
 
+                        Toast.makeText(getBaseContext(), "Could not delete the patient, prescription is dispensed or prescription can't be deleted at the moment, try again later", Toast.LENGTH_LONG).show();
+                    }
 
 
                 } catch (JSONException e) {
@@ -439,7 +601,7 @@ public class ShowPatients extends AppCompatActivity {
                 // Posting params to register url
                 Map<String, String> params = new HashMap<String, String>();
 //                Log.e("category id", getIntent().getStringExtra("category_id"));
-                params.put("ids", ID);
+//                params.put("ids", ID);
 
 
                 return params;
@@ -449,6 +611,4 @@ public class ShowPatients extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
         Log.e("request is", strReq.toString());
     }
-
-
 }

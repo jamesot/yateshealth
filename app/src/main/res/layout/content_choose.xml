@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingTop="56dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="72dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"
+            android:src="@drawable/yates" />
+
+
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Yates Health"
+            android:textStyle="bold"
+            android:textSize="30dp"/>
+
+        <!--  Email Label -->
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/login"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/carddemo_mayknow_add"
+            android:textColor="@color/white"
+            android:padding="12dp"
+            android:text="Login" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/getprescription"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="0dp"
+            android:textColor="@color/white"
+            android:background="@drawable/carddemo_mayknow_add"
+            android:padding="12dp"
+            android:text="Get Prescription" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/signup"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="0dp"
+            android:textColor="@color/white"
+            android:background="@drawable/carddemo_mayknow_add"
+            android:padding="12dp"
+            android:text="Medic Registration" />
+
+    </LinearLayout>
+</ScrollView>

@@ -24,7 +24,7 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <include layout="@layout/content_show" />
+    <include layout="@layout/content_show_prescription" />
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/multiple_actions"
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/yatesyellow"
             fab:fab_colorPressed="@color/yatesyellow"
-            fab:fab_title="Add a Patient" />
+            fab:fab_title="Add a Prescription" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

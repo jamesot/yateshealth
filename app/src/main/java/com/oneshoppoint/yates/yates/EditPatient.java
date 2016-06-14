@@ -1,36 +1,37 @@
 package com.oneshoppoint.yates.yates;
 
 
-        import android.os.Bundle;
-        import android.support.v7.app.AppCompatActivity;
-        import android.app.ProgressDialog;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.content.SharedPreferences;
-        import android.preference.PreferenceManager;
-        import android.util.Base64;
-        import android.util.Log;
-        import android.view.View;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.Toast;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-        import com.android.volley.AuthFailureError;
-        import com.android.volley.DefaultRetryPolicy;
-        import com.android.volley.Request;
-        import com.android.volley.Response;
-        import com.android.volley.VolleyError;
-        import com.android.volley.VolleyLog;
-        import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 
-        import org.json.JSONException;
-        import org.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-        import java.util.HashMap;
-        import java.util.Map;
+import java.util.HashMap;
+import java.util.Map;
 
-        import butterknife.ButterKnife;
-        import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.Bind;
 
 /**
  * Created by stephineosoro on 02/06/16.
@@ -53,15 +54,20 @@ public class EditPatient extends AppCompatActivity {
     EditText id_number;
     @Bind(R.id.phone_number)
     EditText phone_number;
+
     int succ = 0;
-    String
+    String ID;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_patient);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle("Edit Patient");
         ButterKnife.bind(this);
-       getIntent().getStringExtra("ID");
+        _signupButton.setText("Submit");
+        ID = getIntent().getStringExtra("ID");
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,7 +195,7 @@ public class EditPatient extends AppCompatActivity {
 //            jsonobject.put("requestinfo", jsonobject_TWO);
 //            jsonobject.put("request", jsonobject_one);
 
-
+            js.put("id", ID);
             js.put("email", _emailText.getText().toString());
             js.put("phoneNumber", phone_number.getText().toString());
             js.put("firstname", _nameText.getText().toString());
@@ -216,9 +222,11 @@ public class EditPatient extends AppCompatActivity {
 //                            res = jObj.getJSONArray("All");
                             //successfully gotten matatu data
 //                        String regno = jObj.getString("regno");
-                            String status=response.getString("CREATED");
-                            if (status.equals("CREATED")){
-                                Toast.makeText(getBaseContext(), "Successfully added a new patient " , Toast.LENGTH_LONG).show();
+                            String status = response.getString("MODIFIED");
+                            if (status.equals("MODIFIED")) {
+                                Toast.makeText(getBaseContext(), "Successfully updated the patient ", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(getBaseContext(),ShowPatients.class);
+                                startActivity(intent);
                             }
 //                            JSONObject c = response.getJSONObject("data");
                             //successfully gotten matatu data
@@ -283,7 +291,7 @@ public class EditPatient extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("VolleyError", "Error: " + error.getMessage());
 //                hideProgressDialog()
-                Log.d("error volley",error.toString());
+                Log.d("error volley", error.toString());
             }
         }) {
 
@@ -293,10 +301,10 @@ public class EditPatient extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
-                setRetryPolicy(new DefaultRetryPolicy(5*DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+                setRetryPolicy(new DefaultRetryPolicy(5 * DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
                 setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
                 headers.put("Content-Type", "application/json; charset=utf-8");
-                String creds = String.format("%s:%s","odhiamborobinson@zmail.com","powerpoint1994");
+                String creds = String.format("%s:%s", "odhiamborobinson@hotmail.com", "powerpoint1994");
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 headers.put("Authorization", auth);
                 return headers;
@@ -306,6 +314,7 @@ public class EditPatient extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(jsonObjReq);
         Log.e("request is", jsonObjReq.toString());
     }
+
     public void saveResults() {
 
         JSONObject js = new JSONObject();
@@ -336,7 +345,7 @@ public class EditPatient extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String answer) {
-                        Log.e("RESPONSE is",answer.toString());
+                        Log.e("RESPONSE is", answer.toString());
 
                     }
 

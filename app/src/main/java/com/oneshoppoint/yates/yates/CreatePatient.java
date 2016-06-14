@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -57,6 +58,9 @@ public class CreatePatient extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_patient);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle("Create a Patient");
         ButterKnife.bind(this);
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
@@ -213,9 +217,11 @@ public class CreatePatient extends AppCompatActivity {
 //                            res = jObj.getJSONArray("All");
                             //successfully gotten matatu data
 //                        String regno = jObj.getString("regno");
-                        String status=response.getString("CREATED");
-                            if (status.equals("CREATED")){
-                                Toast.makeText(getBaseContext(), "Successfully added a new patient " , Toast.LENGTH_LONG).show();
+                            String status = response.getString("status");
+                            if (status.equals("CREATED")) {
+                                Toast.makeText(getBaseContext(), "Successfully added a new patient ", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(getBaseContext(), ShowPatients.class);
+                                startActivity(intent);
                             }
 //                            JSONObject c = response.getJSONObject("data");
                             //successfully gotten matatu data
@@ -280,7 +286,7 @@ public class CreatePatient extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("VolleyError", "Error: " + error.getMessage());
 //                hideProgressDialog()
-                Log.d("error volley",error.toString());
+                Log.d("error volley", error.toString());
             }
         }) {
 
@@ -290,10 +296,10 @@ public class CreatePatient extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
-                setRetryPolicy(new DefaultRetryPolicy(5*DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+                setRetryPolicy(new DefaultRetryPolicy(5 * DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
                 setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
                 headers.put("Content-Type", "application/json; charset=utf-8");
-                String creds = String.format("%s:%s","odhiamborobinson@zmail.com","powerpoint1994");
+                String creds = String.format("%s:%s", "odhiamborobinson@hotmail.com", "powerpoint1994");
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 headers.put("Authorization", auth);
                 return headers;
@@ -303,6 +309,7 @@ public class CreatePatient extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(jsonObjReq);
         Log.e("request is", jsonObjReq.toString());
     }
+
     public void saveResults() {
 
         JSONObject js = new JSONObject();
@@ -333,7 +340,7 @@ public class CreatePatient extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String answer) {
-                        Log.e("RESPONSE is",answer.toString());
+                        Log.e("RESPONSE is", answer.toString());
 
                     }
 

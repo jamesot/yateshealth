@@ -1,0 +1,14 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginTop="60dp">
+
+    <it.gmariotti.cardslib.library.view.CardViewNative xmlns:card="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/carddemo"
+        style="@style/card_external"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:visibility="invisible"
+        card:card_layout_resourceID="@layout/native_cardwithlist_layout" />
+</ScrollView>

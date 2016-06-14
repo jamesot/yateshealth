@@ -3,6 +3,7 @@ package com.oneshoppoint.yates.yates;
 import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -50,6 +51,8 @@ public class GenericRequest<T> extends JsonRequest<T> {
         clazz = classtype;
         this.headers = headers;
         configureRequest();
+        setRetryPolicy(new DefaultRetryPolicy(5*DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+        setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
     }
 
     /**
@@ -67,6 +70,8 @@ public class GenericRequest<T> extends JsonRequest<T> {
                           Response.Listener<T> listener, Response.ErrorListener errorListener, Map<String, String> headers) {
         this(method, classtype, url, new Gson().toJson(toBeSent), listener,
                 errorListener, headers);
+        setRetryPolicy(new DefaultRetryPolicy(5*DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+        setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
     }
 
     /**
@@ -83,6 +88,8 @@ public class GenericRequest<T> extends JsonRequest<T> {
                           Response.Listener<T> listener, Response.ErrorListener errorListener) {
         this(method, classtype, url, new Gson().toJson(toBeSent), listener,
                 errorListener, new HashMap<String, String>());
+        setRetryPolicy(new DefaultRetryPolicy(5*DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+        setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
     }
 
     /**
@@ -99,6 +106,8 @@ public class GenericRequest<T> extends JsonRequest<T> {
                           Response.Listener<T> listener, Response.ErrorListener errorListener) {
         this(method, classtype, url, requestBody, listener,
                 errorListener, new HashMap<String, String>());
+        setRetryPolicy(new DefaultRetryPolicy(5*DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+        setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
     }
 
     /**
@@ -111,6 +120,8 @@ public class GenericRequest<T> extends JsonRequest<T> {
      */
     public GenericRequest(String url, Class<T> classtype, Response.Listener<T> listener, Response.ErrorListener errorListener) {
         this(Request.Method.GET, url, classtype, "", listener, errorListener);
+        setRetryPolicy(new DefaultRetryPolicy(5*DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+        setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
     }
 
     /**
@@ -124,6 +135,8 @@ public class GenericRequest<T> extends JsonRequest<T> {
      */
     public GenericRequest(String url, Class<T> classtype, Response.Listener<T> listener, Response.ErrorListener errorListener, Map<String, String> headers) {
         this(Request.Method.GET, classtype, url, "", listener, errorListener, headers);
+        setRetryPolicy(new DefaultRetryPolicy(5*DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+        setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
     }
 
     /**
@@ -143,6 +156,8 @@ public class GenericRequest<T> extends JsonRequest<T> {
         this(method, classtype, url, new Gson().toJson(toBeSent), listener,
                 errorListener, headers);
         this.muteRequest = mute;
+        setRetryPolicy(new DefaultRetryPolicy(5 * DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+        setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
     }
 
     /**
@@ -161,6 +176,8 @@ public class GenericRequest<T> extends JsonRequest<T> {
         this(method, classtype, url, new Gson().toJson(toBeSent), listener,
                 errorListener, new HashMap<String, String>());
         this.muteRequest = mute;
+        setRetryPolicy(new DefaultRetryPolicy(5 * DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+        setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
 
     }
 
@@ -180,6 +197,8 @@ public class GenericRequest<T> extends JsonRequest<T> {
         this(method, classtype, url, requestBody, listener,
                 errorListener, new HashMap<String, String>());
         this.muteRequest = mute;
+        setRetryPolicy(new DefaultRetryPolicy(5 * DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+        setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
 
     }
 
@@ -216,6 +235,7 @@ public class GenericRequest<T> extends JsonRequest<T> {
         // Set retry policy
         // Add headers, for auth for example
         // ...
+
         String creds = String.format("%s:%s","odhiamborobinson@zmail.com","powerpoint1994");
         String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
 
