@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,27 +50,47 @@ public class GetPrescription extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
     public static List<String> location = new ArrayList<String>();
     public static List<String> locationID = new ArrayList<String>();
-    static String lID;
+    static String lID = null;
     @Bind(R.id.uuid)
     EditText _uuid;
-    @Bind(R.id.etlocation)
-    AutoCompleteTextView _Location;
+    /* @Bind(R.id.etlocation)
+     AutoCompleteTextView _Location;*/
     @Bind(R.id.btn_signup)
     Button _signupButton;
     @Bind(R.id.error_message)
     TextView errormessage;
-
+    Spinner spinner2;
     int succ = 0;
+    @Bind(R.id.txv)
+    TextView textView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_get_prescription);
+        setContentView(R.layout.app_bar_get_prescription);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("Get Prescription");
         ButterKnife.bind(this);
-        GetLocations();
+        GetLocations(2);
+
+        spinner2 = (Spinner) findViewById(R.id.ward);
+
+
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected_item = parent.getItemAtPosition(position).toString();
+                lID = locationID.get(position);
+                Log.e("INN ID", locationID.get(position));
+                Log.e("INN", selected_item);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +157,7 @@ public class GetPrescription extends AppCompatActivity {
         boolean valid = true;
 
         String uuid = _uuid.getText().toString();
-        String location = _Location.getText().toString();
+        String location = lID;
 
 
         if (uuid.isEmpty()) {
@@ -146,10 +167,10 @@ public class GetPrescription extends AppCompatActivity {
             _uuid.setError(null);
         }
         if (location.isEmpty()) {
-            _Location.setError("Input location");
+            textView.setError("Input location");
             valid = false;
         } else {
-            _Location.setError(null);
+            textView.setError(null);
         }
 
 
@@ -177,18 +198,22 @@ public class GetPrescription extends AppCompatActivity {
         Log.e("JSON serializing", js.toString());
         String tag_string_req = "req_Categories";
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                Request.Method.POST, "http://www.oneshoppoint.com/api/checkout/", js,
+                Request.Method.POST, MyShortcuts.baseURL()+"checkout/", js,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.e("Response from server is", response.toString());
                         try {
                             JSONArray data = response.getJSONArray("data");
-                            MyShortcuts.setDefaults("locationId", lID, getBaseContext());
-                            MyShortcuts.setDefaults("uuid", _uuid.getText().toString(), getBaseContext());
-                            Intent intent = new Intent(getBaseContext(), Retailers.class);
-                            intent.putExtra("retailers", response.toString());
-                            startActivity(intent);
+                            if (data.length() > 0) {
+                                MyShortcuts.setDefaults("locationId", lID, getBaseContext());
+                                MyShortcuts.setDefaults("uuid", _uuid.getText().toString(), getBaseContext());
+                                Intent intent = new Intent(getBaseContext(), Retailers.class);
+                                intent.putExtra("retailers", response.toString());
+                                startActivity(intent);
+                            } else {
+                                MyShortcuts.showToast("No retailers in that region", getBaseContext());
+                            }
 
 
                         } catch (JSONException e) {
@@ -229,14 +254,19 @@ public class GetPrescription extends AppCompatActivity {
     }
 
 
-    public void GetLocations() {
-        Log.d("URL is", "https://www.oneshoppoint.com/api/location/");
+    public void GetLocations(final int page) {
+        Log.d("URL is", MyShortcuts.baseURL()+"location/");
         String tag_string_req = "req_inn";
-        StringRequest strReq = new StringRequest(Request.Method.GET, "https://www.oneshoppoint.com/api/location/", new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.GET, MyShortcuts.baseURL()+"location?parts=" + page, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.e("Response from server is", response.toString());
 
+
+                if (location.size()>0) {
+                    location.clear();
+                    locationID.clear();
+                }
 
                 String success = null;
                 try {
@@ -254,10 +284,15 @@ public class GetPrescription extends AppCompatActivity {
 
 
                     final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(),
-                            android.R.layout.simple_dropdown_item_1line, location);
+                            android.R.layout.simple_spinner_item, location);
 
-                    _Location.setAdapter(adapter);
-                    _Location.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner2.setAdapter(adapter);
+
+
+//                    _Location.setAdapter(adapter);
+                  /*  _Location.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -273,7 +308,7 @@ public class GetPrescription extends AppCompatActivity {
                             }
 
                         }
-                    });
+                    });*/
 
 
                 } catch (JSONException e) {

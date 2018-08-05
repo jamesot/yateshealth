@@ -8,6 +8,8 @@
         android:icon="@drawable/yates"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
         android:theme="@style/AppTheme">
 
         <activity
@@ -181,6 +183,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".MyIntro"
+            android:label="Yates Health"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

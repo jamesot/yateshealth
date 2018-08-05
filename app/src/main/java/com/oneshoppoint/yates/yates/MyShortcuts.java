@@ -2,6 +2,8 @@ package com.oneshoppoint.yates.yates;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.widget.Toast;
@@ -15,12 +17,15 @@ import java.util.HashMap;
  */
 public class MyShortcuts {
 
-    public String baseURL = "https://www.oneshoppoint.com/api/";
+    public static String baseURL(){
+        return "https://www.oneshoppoint.com/api/";
+    }
 
     public static void set(String username, String password, Context context) {
         setDefaults("username", username, context);
         setDefaults("password", password, context);
     }
+
 
     public static HashMap<String, String> AunthenticationHeaders(Context context) {
         HashMap<String, String> headers = new HashMap<String, String>();
@@ -57,6 +62,30 @@ public class MyShortcuts {
 
         Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
         toast.show();
+    }
+
+    public static boolean hasInternetConnected(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isConnectedOrConnecting()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static Boolean checkDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.contains(key);
+    }
+
+    public static void Delete(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        editor.commit();
     }
 
 }

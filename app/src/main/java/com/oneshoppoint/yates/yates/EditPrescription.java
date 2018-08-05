@@ -12,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -60,7 +62,7 @@ public class EditPrescription extends AppCompatActivity implements AdapterView.O
     EditText unit;
     @Bind(R.id.note)
     EditText Note;
-
+    Boolean checked = false;
     int succ = 0;
     private static String innId,selected_item;
 
@@ -72,9 +74,30 @@ public class EditPrescription extends AppCompatActivity implements AdapterView.O
         setSupportActionBar(toolbar);
         setTitle("Edit Prescription");
         ButterKnife.bind(this);
+        GetProduct();
+        MyShortcuts.setDefaults("type", "product", getBaseContext());
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioOptions);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                  @Override
+                                                  public void onCheckedChanged(RadioGroup group, int checkedId) {
+                                                      // checkedId is the RadioButton selected
+
+                                                      RadioButton rb = (RadioButton) findViewById(checkedId);
+                                                      if (rb.getText().toString().equals("Inn")) {
+                                                          GetInn();
+                                                          MyShortcuts.setDefaults("type", "inn", getBaseContext());
+                                                      } else {
+                                                          GetProduct();
+                                                          MyShortcuts.setDefaults("type", "product", getBaseContext());
+                                                      }
+
+                                                  }
+
+
+                                              }
+        );
         this.spinner2 = (Spinner) findViewById(R.id.inn_spinner);
         spinner2.setOnItemSelectedListener(this);
-        GetInn();
 
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +125,7 @@ public class EditPrescription extends AppCompatActivity implements AdapterView.O
         final ProgressDialog progressDialog = new ProgressDialog(EditPrescription.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Creating Account...");
+        progressDialog.setMessage("Editing prescription...");
         progressDialog.show();
 
 
@@ -120,7 +143,7 @@ public class EditPrescription extends AppCompatActivity implements AdapterView.O
                             Intent intent = new Intent(getBaseContext(), ShowPatients.class);
                             startActivity(intent);
                         }
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
                     }
                 }, 3000);
     }
@@ -196,7 +219,17 @@ public class EditPrescription extends AppCompatActivity implements AdapterView.O
             JSONArray ja = new JSONArray();
             finalJS.put("id",getIntent().getStringExtra("ID"));
             Log.e("INN ID", innId);
-            js.put("innId", innId);
+            if (MyShortcuts.getDefaults("type", getBaseContext()).equals("inn")) {
+                js.put("innId", innId);
+            } else {
+                js.put("productId", innId);
+            }
+            if (MyShortcuts.getDefaults("type", getBaseContext()).equals("inn")) {
+                js.put("type", "inn");
+            } else {
+                js.put("type", "product");
+            }
+            Log.e("INN ID", innId);
             js.put("duration", _duration.getText().toString());
             js.put("unit", unit.getText().toString());
             js.put("note", Note.getText().toString());
@@ -213,7 +246,7 @@ public class EditPrescription extends AppCompatActivity implements AdapterView.O
         Log.e("JSON serializing", finalJS.toString());
         String tag_string_req = "req_Categories";
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                Request.Method.PUT, "https://www.oneshoppoint.com/api/prescription/", finalJS,
+                Request.Method.PUT, MyShortcuts.baseURL()+"prescription/", finalJS,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -263,7 +296,8 @@ public class EditPrescription extends AppCompatActivity implements AdapterView.O
                 setRetryPolicy(new DefaultRetryPolicy(5 * DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
                 setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
                 headers.put("Content-Type", "application/json; charset=utf-8");
-                String creds = String.format("%s:%s", "odhiamborobinson@hotmail.com", "powerpoint1994");
+                                String creds = String.format("%s:%s", MyShortcuts.getDefaults("email", getBaseContext()), MyShortcuts.getDefaults("password", getBaseContext()));
+
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 headers.put("Authorization", auth);
                 return headers;
@@ -275,24 +309,27 @@ public class EditPrescription extends AppCompatActivity implements AdapterView.O
     }
 
     private void GetInn() {
-        Log.d("URL is", "https://www.oneshoppoint.com/api/inn/");
+        Log.d("URL is", MyShortcuts.baseURL()+"inn?medic=allowed");
         String tag_string_req = "req_inn";
-        StringRequest strReq = new StringRequest(Request.Method.GET, "https://www.oneshoppoint.com/api/inn/", new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.GET, MyShortcuts.baseURL()+"inn?medic=allowed", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.e("Response from server is", response.toString());
-
-
+                INN.clear();
+                INNID.clear();
+                checked = true;
+                spinner2.setAdapter(null);
                 String success = null;
                 try {
                     JSONObject jObj = new JSONObject(response);
                     JSONArray data = jObj.getJSONArray("data");
                     for (int i = 0; i < data.length(); i++) {
                         JSONObject c = data.getJSONObject(i);
-                        String name=c.getString("name");
+                        String name = c.getString("name");
                         Log.e("Each data" + i, name);
                         INN.add(name);
                         INNID.add(c.getString("id"));
+
 
                         Log.e("Each data" + i, c.getString("id"));
                     }
@@ -326,7 +363,91 @@ public class EditPrescription extends AppCompatActivity implements AdapterView.O
                 setRetryPolicy(new DefaultRetryPolicy(5 * DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
                 setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
                 headers.put("Content-Type", "application/json; charset=utf-8");
-                String creds = String.format("%s:%s", "odhiamborobinson@hotmail.com", "powerpoint1994");
+                String creds = String.format("%s:%s", MyShortcuts.getDefaults("email", getBaseContext()), MyShortcuts.getDefaults("password", getBaseContext()));
+
+                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                headers.put("Authorization", auth);
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+                Map<String, String> params = new HashMap<String, String>();
+//                Log.e("category id", getIntent().getStringExtra("category_id"));
+//                params.put("categoryId", 2 + "");
+
+
+                return params;
+            }
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+        Log.e("request is", strReq.toString());
+    }
+
+
+    private void GetProduct() {
+        Log.d("URL is", MyShortcuts.baseURL()+"product?medic=allowed");
+        String tag_string_req = "req_inn";
+        StringRequest strReq = new StringRequest(Request.Method.GET, MyShortcuts.baseURL()+"product?medic=allowed", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.e("Response from server is", response.toString());
+
+                if (checked) {
+                    INN.clear();
+                    INNID.clear();
+                    checked = true;
+                    spinner2.setAdapter(null);
+                }
+
+                String success = null;
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    JSONArray data = jObj.getJSONArray("data");
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject c = data.getJSONObject(i);
+                        String name = c.getString("name");
+                        Log.e("Each data" + i, name);
+                        INN.add(name);
+                        INNID.add(c.getString("id"));
+
+                        Log.e("Each data" + i, c.getString("id"));
+                    }
+
+
+                    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(),
+                            android.R.layout.simple_spinner_item, INN);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner2.setAdapter(adapter);
+
+                } catch (JSONException e) {
+                    // JSON error
+                    e.printStackTrace();
+                    Toast.makeText(getBaseContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e("JSON ERROR", e.toString());
+                }
+            }
+
+
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("VolleyError", "Error: " + error.getMessage());
+//                hideProgressDialog();
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                setRetryPolicy(new DefaultRetryPolicy(5 * DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+                setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                String creds = String.format("%s:%s", MyShortcuts.getDefaults("email", getBaseContext()), MyShortcuts.getDefaults("password", getBaseContext()));
+
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 headers.put("Authorization", auth);
                 return headers;

@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         Log.e("JSON serializing", js.toString());
         String tag_string_req = "req_Categories";
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                Request.Method.GET, "https://www.oneshoppoint.com/api/category/", js,
+                Request.Method.GET, MyShortcuts.baseURL()+"category/", js,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

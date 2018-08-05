@@ -291,7 +291,7 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
         Log.e("JSON serializing", finalJS.toString());
         String tag_string_req = "req_Categories";
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                Request.Method.POST, "https://www.oneshoppoint.com/api/user/", finalJS,
+                Request.Method.POST, MyShortcuts.baseURL()+"user/", finalJS,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -352,9 +352,9 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void GetMedicType() {
-        Log.d("URL is", "https://www.oneshoppoint.com/api/inn/");
+        Log.d("URL is", MyShortcuts.baseURL()+"inn/");
         String tag_string_req = "req_medicType";
-        StringRequest strReq = new StringRequest(Request.Method.GET, "https://www.oneshoppoint.com/api/medictype/", new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.GET, MyShortcuts.baseURL()+"medictype/", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.e("Response from server is", response.toString());
@@ -444,9 +444,9 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void GetLocations() {
-        Log.d("URL is", "https://www.oneshoppoint.com/api/location/");
+        Log.d("URL is", MyShortcuts.baseURL()+"location/");
         String tag_string_req = "req_inn";
-        StringRequest strReq = new StringRequest(Request.Method.GET, "https://www.oneshoppoint.com/api/location/", new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.GET, MyShortcuts.baseURL()+"location/", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.e("Response from server is", response.toString());

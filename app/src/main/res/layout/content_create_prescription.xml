@@ -16,14 +16,70 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Pick an INN below"
+            android:text="Prescribe by inn or product"
+            android:textColor="@color/yatesyellow" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioGroup
+                android:id="@+id/radioOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/product"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:gravity="right"
+                    android:text="Product"
+                    android:textColor="#000"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content" />
+
+                <RadioButton
+                    android:id="@+id/inn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="Inn"
+                    android:textColor="#000"
+                    android:textSize="16sp" />
+
+                <!--<RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New RadioButton"
+                    android:id="@+id/radioButton"
+                    android:layout_centerVertical="true"
+                    android:layout_alignLeft="@+id/textViewValue"
+                    android:layout_alignStart="@+id/textViewValue" />-->
+            </RadioGroup>
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Pick below"
             android:textColor="@color/yatesyellow" />
 
         <Spinner
             android:id="@+id/inn_spinner"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="Choose INN" />
+            android:hint="Choose" />
 
 
         <!-- Name Label -->
@@ -42,7 +98,7 @@
         </android.support.design.widget.TextInputLayout>
 
 
-        <!-- Sacco Label -->
+      ]
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,7 +114,7 @@
         </android.support.design.widget.TextInputLayout>
 
 
-        <!--  Email Label -->
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,7 +126,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Quantity"
-                android:inputType="text" />
+                android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
         <!--  Driver passenger Label -->

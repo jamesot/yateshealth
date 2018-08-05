@@ -80,11 +80,11 @@ public class MedicLogin extends AppCompatActivity {
 
         _loginButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(MedicLogin.this,
+      /*  final ProgressDialog progressDialog = new ProgressDialog(MedicLogin.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
+        progressDialog.show();*/
 
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
@@ -97,7 +97,7 @@ public class MedicLogin extends AppCompatActivity {
                         // On complete call either onLoginSuccess or onLoginFailed
                         onLoginSuccess();
                         // onLoginFailed();
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
                     }
                 }, 3000);
     }
@@ -118,7 +118,8 @@ public class MedicLogin extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         // Disable going back to the MainActivity
-        moveTaskToBack(true);
+//        moveTaskToBack(true);
+        super.onBackPressed();
     }
 
     public void onLoginSuccess() {
@@ -158,7 +159,7 @@ public class MedicLogin extends AppCompatActivity {
     private void logindetail(final String username, final String password) {
         String tag_string_req = "req_login";
         StringRequest strReq = new StringRequest(Request.Method.POST,
-                "https://www.oneshoppoint.com/api/login/medic", new Response.Listener<String>() {
+                MyShortcuts.baseURL()+"login/medic", new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -198,6 +199,7 @@ public class MedicLogin extends AppCompatActivity {
                 setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
                 headers.put("Content-Type", "application/json; charset=utf-8");
                 String creds = String.format("%s:%s",username,password);
+                Log.e("pass",password);
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 headers.put("Authorization", auth);
                 return headers;
@@ -227,7 +229,7 @@ public class MedicLogin extends AppCompatActivity {
     private void loginUser(final String username, final String password) {
         String tag_string_req = "req_login";
         StringRequest strReq = new StringRequest(Request.Method.POST,
-                "https://www.oneshoppoint.com/api/login/customer", new Response.Listener<String>() {
+                MyShortcuts.baseURL()+"login/customer", new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -254,8 +256,13 @@ public class MedicLogin extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Getting data error", "Error: " + error.getMessage());
+
+                if (MyShortcuts.hasInternetConnected(getBaseContext())){
+                    Toast.makeText(getApplicationContext(),
+                            "No internet connection", Toast.LENGTH_LONG).show();
+                }else{
                 Toast.makeText(getApplicationContext(),
-                        "wrogn username/password", Toast.LENGTH_LONG).show();
+                        "wrong username/password", Toast.LENGTH_LONG).show();}
 //                hideDialog();
             }
         }) {

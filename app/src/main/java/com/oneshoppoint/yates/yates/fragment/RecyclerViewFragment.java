@@ -19,6 +19,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 import com.oneshoppoint.yates.yates.AppController;
+import com.oneshoppoint.yates.yates.MyShortcuts;
 import com.oneshoppoint.yates.yates.R;
 import com.oneshoppoint.yates.yates.TestRecyclerViewAdapter;
 
@@ -99,7 +100,7 @@ public class RecyclerViewFragment extends Fragment {
         Log.e("JSON serializing", js.toString());
         String tag_string_req = "req_Categories";
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                Request.Method.GET, "https://www.oneshoppoint.com/api/category/", js,
+                Request.Method.GET, MyShortcuts.baseURL()+"category/", js,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

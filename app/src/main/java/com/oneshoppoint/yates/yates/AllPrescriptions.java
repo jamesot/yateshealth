@@ -130,7 +130,7 @@ public class AllPrescriptions extends AppCompatActivity {
                         mCardArrayAdapter.notifyDataSetChanged();
 //                    }
                         Delete(selected);
-                    }else{
+                    } else {
                         Toast.makeText(getContext(), "The prescription is already dispensed, can't be deleted", Toast.LENGTH_SHORT).show();
                     }
 //                    SendPrescription(selected);
@@ -196,8 +196,6 @@ public class AllPrescriptions extends AppCompatActivity {
             subtitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
 
 
                     Intent intent = new Intent(getContext(), EditPrescription.class);
@@ -272,7 +270,7 @@ public class AllPrescriptions extends AppCompatActivity {
         }
         Log.e("JSON serializing", js.toString());
         String tag_string_req = "req_Categories";
-        StringRequest strReq = new StringRequest(Request.Method.GET, "https://www.oneshoppoint.com/api/patient/", new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.GET, MyShortcuts.baseURL()+"patient/", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.e("Response from server is", response.toString());
@@ -380,7 +378,7 @@ public class AllPrescriptions extends AppCompatActivity {
                 setRetryPolicy(new DefaultRetryPolicy(5 * DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
                 setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
                 headers.put("Content-Type", "application/json; charset=utf-8");
-                String creds = String.format("%s:%s", "odhiamborobinson@hotmail.com", "powerpoint1994");
+                String creds = String.format("%s:%s", MyShortcuts.getDefaults("email", getBaseContext()), MyShortcuts.getDefaults("password", getBaseContext()));
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 headers.put("Authorization", auth);
                 return headers;
@@ -404,9 +402,9 @@ public class AllPrescriptions extends AppCompatActivity {
 
 
     private void getPrescription() {
-        Log.d("URL is", "https://www.oneshoppoint.com/api/prescription?patientId=" + getIntent().getStringExtra("ID"));
+        Log.d("URL is", MyShortcuts.baseURL()+"prescription?patientId=" + getIntent().getStringExtra("ID"));
         String tag_string_req = "req_Categories";
-        StringRequest strReq = new StringRequest(Request.Method.GET, "https://www.oneshoppoint.com/api/prescription?patientId=" + getIntent().getStringExtra("ID"), new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.GET, MyShortcuts.baseURL()+"prescription?patientId=" + getIntent().getStringExtra("ID"), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.e("Response from server is", response.toString());
@@ -432,24 +430,53 @@ public class AllPrescriptions extends AppCompatActivity {
                         for (int j = 0; j < prescription.length(); j++) {
                             ItemDetails items = new ItemDetails();
                             JSONObject d = prescription.getJSONObject(j);
-                            JSONObject inn = d.getJSONObject("inn");
-                            String name = inn.getString("name");
-                            String strength = d.getString("note");
-                            String dosageForm = d.getString("dosageForm");
-                            String frequencyQuantity = d.getString("frequencyQuantity");
-                            String frequencyPerDay = d.getString("frequencyPerDay");
-                            items.setName(name);
-                            items.setItemDescription(strength);
-                            items.setID(dosageForm);
-                            items.setQuantity(frequencyQuantity);
-                            items.setTotal(frequencyPerDay);
-                            String duration = d.getString("duration");
-                            String unit = d.getString("unit");
-                            items.setEmail(duration + " " + unit);
-                            results.add(items);
+                            JSONObject inn = null;
+                            String name=null;
+                            if (d.getString("type").equals("product")&&!(d.get("product").equals(null))) {
+                                inn = d.getJSONObject("product");
+                               name = inn.getString("name");
+                                String strength = d.getString("note");
+                                String dosageForm = d.getString("dosageForm");
+                                String frequencyQuantity = d.getString("frequencyQuantity");
+                                String frequencyPerDay = d.getString("frequencyPerDay");
 
-                            Log.e("weeks", duration + " " + unit);
-                            Log.e("Each INN" + d + i, inn.toString());
+                                items.setItemDescription(strength);
+                                items.setID(dosageForm);
+                                items.setQuantity(frequencyQuantity);
+                                items.setTotal(frequencyPerDay);
+                                String duration = d.getString("duration");
+                                String unit = d.getString("unit");
+                                items.setEmail(duration + " " + unit);
+                                results.add(items);
+                                Log.e("weeks", duration + " " + unit);
+                                Log.e("Each INN" + d + i, inn.toString());
+                            } else if(d.getString("type").equals("inn")&&!(d.get("inn").equals(null))){
+                                inn = d.getJSONObject("inn");
+
+                                name = inn.getString("name");
+                                String strength = d.getString("note");
+                                String dosageForm = d.getString("dosageForm");
+                                String frequencyQuantity = d.getString("frequencyQuantity");
+                                String frequencyPerDay = d.getString("frequencyPerDay");
+
+                                items.setItemDescription(strength);
+                                items.setID(dosageForm);
+                                items.setQuantity(frequencyQuantity);
+                                items.setTotal(frequencyPerDay);
+                                String duration = d.getString("duration");
+                                String unit = d.getString("unit");
+                                items.setEmail(duration + " " + unit);
+                                results.add(items);
+                                Log.e("weeks", duration + " " + unit);
+                                Log.e("Each INN" + d + i, inn.toString());
+                            }else{
+                                name="";
+
+                            }
+
+
+
+
 
                             GplayGridCard card = new GplayGridCard(getBaseContext());
 
@@ -516,7 +543,7 @@ public class AllPrescriptions extends AppCompatActivity {
                 setRetryPolicy(new DefaultRetryPolicy(5 * DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
                 setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
                 headers.put("Content-Type", "application/json; charset=utf-8");
-                String creds = String.format("%s:%s", "odhiamborobinson@hotmail.com", "powerpoint1994");
+                String creds = String.format("%s:%s", MyShortcuts.getDefaults("email", getBaseContext()), MyShortcuts.getDefaults("password", getBaseContext()));
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 headers.put("Authorization", auth);
                 return headers;
@@ -540,7 +567,7 @@ public class AllPrescriptions extends AppCompatActivity {
 
     private void Delete(String ids) {
         String tag_string_req = "req_Categories";
-        StringRequest strReq = new StringRequest(Request.Method.DELETE, "https://www.oneshoppoint.com/api/prescription?ids=" + ids, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.DELETE, MyShortcuts.baseURL()+"prescription?ids=" + ids, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.e("Response from server is", response.toString());
@@ -590,7 +617,8 @@ public class AllPrescriptions extends AppCompatActivity {
                 setRetryPolicy(new DefaultRetryPolicy(5 * DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
                 setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
                 headers.put("Content-Type", "application/json; charset=utf-8");
-                String creds = String.format("%s:%s", "odhiamborobinson@hotmail.com", "powerpoint1994");
+                String creds = String.format("%s:%s", MyShortcuts.getDefaults("email", getBaseContext()), MyShortcuts.getDefaults("password", getBaseContext()));
+
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 headers.put("Authorization", auth);
                 return headers;

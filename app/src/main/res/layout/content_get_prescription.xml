@@ -36,7 +36,38 @@
             android:textColor="@color/red"
             android:visibility="invisible" />
 
+
+
+
         <!-- location Label -->
+
+        <!--<TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose location below"
+            android:textColor="@color/yatesyellow" />
+
+        <Spinner
+            android:id="@+id/county"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Choose location below" />-->
+
+        <TextView
+            android:id="@+id/txv"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose a location below"
+            android:textColor="@color/yatesyellow" />
+
+        <Spinner
+            android:id="@+id/ward"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Choose location below" />
+
+
+<!--
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,15 +83,17 @@
                 android:hint="Type your location below"
                 android:paddingTop="20dp"></AutoCompleteTextView>
         </android.support.design.widget.TextInputLayout>
+-->
 
 
-        <!-- Signup Button -->
+        <!-- Get prescription Button -->
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_signup"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:layout_marginTop="24dp"
+            android:background="@color/yatesgreen"
             android:padding="12dp"
             android:text="Get prescription" />
 

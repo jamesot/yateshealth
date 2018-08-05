@@ -53,7 +53,7 @@ public class CreatePatient extends AppCompatActivity {
     @Bind(R.id.phone_number)
     EditText phone_number;
     int succ = 0;
-
+    ProgressDialog progressDialog = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +85,7 @@ public class CreatePatient extends AppCompatActivity {
 
 //        _signupButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(CreatePatient.this,
+         progressDialog = new ProgressDialog(CreatePatient.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
@@ -98,9 +98,9 @@ public class CreatePatient extends AppCompatActivity {
         String phone = phone_number.getText().toString();
 
         // TODO: Implement your own signup logic here.
-        storesignup();
+        storesignup();}
 //        saveResults();
-        new android.os.Handler().postDelayed(
+     /*   new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
@@ -111,10 +111,10 @@ public class CreatePatient extends AppCompatActivity {
                             Intent intent = new Intent(getBaseContext(), ShowPatients.class);
                             startActivity(intent);
                         }
-                        progressDialog.dismiss();
+
                     }
                 }, 3000);
-    }
+    }*/
 
 
     public void onSignupSuccess() {
@@ -175,7 +175,7 @@ public class CreatePatient extends AppCompatActivity {
     private void storesignup() {
         // Toast.makeText(getBaseContext(), "Inside function!", Toast.LENGTH_SHORT).show();
         // Tag used to cancel the request
-
+        progressDialog.dismiss();
         JSONObject js = new JSONObject();
         try {
 //            JSONObject jsonobject_one = new JSONObject();
@@ -203,7 +203,7 @@ public class CreatePatient extends AppCompatActivity {
         Log.e("JSON serializing", js.toString());
         String tag_string_req = "req_Categories";
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                Request.Method.POST, "https://www.oneshoppoint.com/api/patient/", js,
+                Request.Method.POST, MyShortcuts.baseURL()+"patient/", js,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -299,7 +299,7 @@ public class CreatePatient extends AppCompatActivity {
                 setRetryPolicy(new DefaultRetryPolicy(5 * DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
                 setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
                 headers.put("Content-Type", "application/json; charset=utf-8");
-                String creds = String.format("%s:%s", "odhiamborobinson@hotmail.com", "powerpoint1994");
+                String creds = String.format("%s:%s", MyShortcuts.getDefaults("email", getBaseContext()), MyShortcuts.getDefaults("password", getBaseContext()));
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 headers.put("Authorization", auth);
                 return headers;
@@ -336,7 +336,7 @@ public class CreatePatient extends AppCompatActivity {
             e.printStackTrace();
             Log.e("JSONErrorin serializing", e.toString());
         }
-        GenericRequest req = new GenericRequest(Request.Method.POST, "https://www.oneshoppoint.com/api/patient/", JSONObject.class, js,
+        GenericRequest req = new GenericRequest(Request.Method.POST, MyShortcuts.baseURL()+"patient/", JSONObject.class, js,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String answer) {

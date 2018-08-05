@@ -208,7 +208,7 @@ public class EditPatient extends AppCompatActivity {
         Log.e("JSON serializing", js.toString());
         String tag_string_req = "req_Categories";
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                Request.Method.PUT, "https://www.oneshoppoint.com/api/patient/", js,
+                Request.Method.PUT, MyShortcuts.baseURL()+"patient/", js,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -304,7 +304,8 @@ public class EditPatient extends AppCompatActivity {
                 setRetryPolicy(new DefaultRetryPolicy(5 * DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
                 setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
                 headers.put("Content-Type", "application/json; charset=utf-8");
-                String creds = String.format("%s:%s", "odhiamborobinson@hotmail.com", "powerpoint1994");
+                                String creds = String.format("%s:%s", MyShortcuts.getDefaults("email", getBaseContext()), MyShortcuts.getDefaults("password", getBaseContext()));
+
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 headers.put("Authorization", auth);
                 return headers;
@@ -341,7 +342,7 @@ public class EditPatient extends AppCompatActivity {
             e.printStackTrace();
             Log.e("JSONErrorin serializing", e.toString());
         }
-        GenericRequest req = new GenericRequest(Request.Method.POST, "https://www.oneshoppoint.com/api/patient/", JSONObject.class, js,
+        GenericRequest req = new GenericRequest(Request.Method.POST, MyShortcuts.baseURL()+"patient/", JSONObject.class, js,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String answer) {
