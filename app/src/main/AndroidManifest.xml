@@ -192,18 +192,20 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_prescription_web_view"
             android:screenOrientation="sensor"
-            android:theme="@style/FinestWebViewTheme.Light"/>
-
+            android:theme="@style/FinestWebViewTheme.Light" />
         <activity
             android:name=".PrescriptionWebViewActivity"
             android:label="Yates Health"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".getFeedback"
+            android:label="@string/title_activity_get_feedback"></activity>
     </application>
 
 </manifest>

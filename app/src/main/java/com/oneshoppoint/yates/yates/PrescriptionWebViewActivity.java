@@ -1,11 +1,19 @@
 package com.oneshoppoint.yates.yates;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -14,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.oneshoppoint.yates.yates.Interface.ServerCallback;
 import com.oneshoppoint.yates.yates.Interface.VolleyCallback;
@@ -27,19 +36,24 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.oneshoppoint.yates.yates.utils.Utils.applyFontForToolbarTitle;
 import static com.oneshoppoint.yates.yates.utils.Utils.baseURL;
+import static com.oneshoppoint.yates.yates.utils.Utils.showToast;
 
 public class PrescriptionWebViewActivity extends AppCompatActivity {
     protected Typeface mTfLight;
     ArrayList<String> items = new ArrayList<>();
     private EditText first_name, last_name, phone, email, medic_id;
     private String county = "";
-
+    private int PICK_IMAGE_REQUEST = 1;
+    private static Bitmap bitmap;
+    static boolean imagetrue = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +82,14 @@ public class PrescriptionWebViewActivity extends AppCompatActivity {
 
         medic_id = (EditText) findViewById(R.id.medic_id);
         medic_id.setTypeface(mTfLight);
+
+        Button buttonChoose = (Button) findViewById(R.id.btn_choose);
+        buttonChoose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFileChooser();
+            }
+        });
 
         Button submit = (Button) findViewById(R.id.btn_submit);
         submit.setTypeface(mTfLight);
@@ -159,6 +181,12 @@ public class PrescriptionWebViewActivity extends AppCompatActivity {
     }
 
     private void uploadData() {
+
+        if (!imagetrue) {
+            showToast("Please pick an image first", getBaseContext());
+            return;
+        }
+
         Map<String, String> params = new HashMap<String, String>();
         params.put("firstname", first_name.getText().toString());
         params.put("lastname", last_name.getText().toString());
@@ -166,7 +194,7 @@ public class PrescriptionWebViewActivity extends AppCompatActivity {
         params.put("phonenumber", phone.getText().toString());
         params.put("county", county);
         params.put("medic_id", medic_id.getText().toString());
-
+        params.put("prescription_image", getStringImage(bitmap));
 
         PostData post = new PostData(getBaseContext());
         post.post(baseURL() + "apipost", params, null, null, new ServerCallback() {
@@ -183,5 +211,67 @@ public class PrescriptionWebViewActivity extends AppCompatActivity {
         });
 
     }
+
+    private void showFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri filePath = data.getData();
+            try {
+                //Getting the Bitmap from Gallery
+                imagetrue = true;
+
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                Log.e("image chosen", bitmap.toString());
+                TextView tv = (TextView) findViewById(R.id.imageChosen);
+                tv.setVisibility(View.VISIBLE);
+                //Setting the Bitmap to ImageView
+//                imageView.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public String getPath(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        String document_id = cursor.getString(0);
+        document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
+        cursor.close();
+
+        cursor = getContentResolver().query(
+                android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
+        cursor.moveToFirst();
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+        cursor.close();
+
+        return path;
+    }
+
+    public String getStringImage(Bitmap bmp) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        String encodedImage = null;
+        try {
+            bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+            byte[] imageBytes = baos.toByteArray();
+            encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+
+        } catch (Exception e) {
+            Log.e("Bitmap", e.toString());
+        }
+        return encodedImage;
+    }
+
 
 }
