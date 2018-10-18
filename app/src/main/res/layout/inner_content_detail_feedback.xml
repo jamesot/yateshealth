@@ -1,0 +1,71 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_marginLeft="3dp">
+
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:textColor="@android:color/holo_green_light"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/subject"
+        android:layout_width="150dp"
+        android:layout_height="32dp"
+        android:background="@drawable/carddemo_mayknow_add"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:text="Edit"
+        android:textAlignment="center"
+        android:layout_alignBottom="@+id/description"
+        android:layout_alignLeft="@+id/description"
+        android:layout_alignStart="@+id/description" />
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="150dp"
+        android:layout_height="32dp"
+        android:background="@drawable/carddemo_mayknow_add"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:text="Prescription"
+        android:layout_alignBottom="@+id/description"
+        android:layout_toLeftOf="@+id/carddemo_gplay_main_inner_title"
+        android:layout_toStartOf="@+id/carddemo_gplay_main_inner_title" />
+
+
+    <TextView
+        android:id="@+id/area"
+        android:layout_width="40dp"
+        android:layout_height="32dp"
+        android:background="@drawable/carddemo_mayknow_add"
+        android:textColor="#BBB"
+        android:textSize="12sp"
+        android:text="Mimi"
+        android:layout_alignBottom="@+id/description"
+        android:layout_centerHorizontal="true"
+        android:layout_toEndOf="@+id/carddemo_gplay_main_inner_subtitle2"
+        android:layout_toRightOf="@+id/carddemo_gplay_main_inner_subtitle2"
+        android:layout_marginLeft="30dp"/>
+
+    <TextView
+        android:id="@+id/feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:textColor="#BBB"
+        android:text="email"
+        android:textSize="12sp"
+        android:visibility="invisible" />
+
+
+
+</RelativeLayout>

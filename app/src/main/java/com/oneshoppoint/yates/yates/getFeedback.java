@@ -24,7 +24,7 @@ public class getFeedback extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_feedback);
     }
-    public class GplayGridCard extends Card {
+  /*  public class GplayGridCard extends Card {
 
         protected String mTitle;
         protected TextView mSecondaryTitle;
@@ -38,7 +38,7 @@ public class getFeedback extends Activity {
         protected float rating;
 
         public GplayGridCard(Context context) {
-            super(context, R.layout.inner_content_detail);
+            super(context, R.layout.inner_content_detail_feedback);
         }
 
 
@@ -58,11 +58,11 @@ public class getFeedback extends Activity {
                     String selected = card.getId();
                     Log.e("card id is",card.getId());
                     ;
-                   /* Toast ToastMessage = Toast.makeText(getApplicationContext(), "No info for " + card.getTitle() + "!", Toast.LENGTH_SHORT);
+                    Toast ToastMessage = Toast.makeText(getApplicationContext(), "No info for " + card.getTitle() + "!", Toast.LENGTH_SHORT);
                     View toastView = ToastMessage.getView();
                     toastView.setBackgroundResource(R.drawable.toast_background_color);
                     ToastMessage.show();
-*/
+
                     final TextView subtitle = (TextView) findViewById(R.id.carddemo_gplay_main_inner_subtitle);
                     if (item.getTitle().equals("Info")) {
                         Intent intent = new Intent(getBaseContext(), PaybillDetail.class);
@@ -102,26 +102,26 @@ public class getFeedback extends Activity {
 //            addCardThumbnail(thumbnail);
 
 
-          /*  OnCardClickListener clickListener = new OnCardClickListener() {
+            OnCardClickListener clickListener = new OnCardClickListener() {
                 @Override
                 public void onClick(Card card, View view) {
                     //Do something
                 }
             };
 
-            addPartialOnClickListener(Card.CLICK_LISTENER_CONTENT_VIEW, clickListener);*/
-         /*   setOnClickListener(new OnCardClickListener() {
+            addPartialOnClickListener(Card.CLICK_LISTENER_CONTENT_VIEW, clickListener);
+            setOnClickListener(new OnCardClickListener() {
                 @Override
                 public void onClick(Card card, View view) {
 //                    Do something
                     String selected= card.getId();
                     Toast.makeText(getBaseContext(), "Item ID is" + selected, Toast.LENGTH_LONG).show();
-                   *//* Intent intent =new Intent(getBaseContext(),ProductDetail.class);
+                    Intent intent =new Intent(getBaseContext(),ProductDetail.class);
                     intent.putExtra("id",selected);
                     intent.putExtra("product_name",card.getTitle());
-                    startActivity(intent);*//*
+                    startActivity(intent);
                 }
-            });*/
+            });
 
 
         }
@@ -166,6 +166,6 @@ public class getFeedback extends Activity {
             }
         }
 
-    }
+    }*/
 
 }
