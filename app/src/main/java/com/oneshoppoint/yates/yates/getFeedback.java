@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.MenuItem;
@@ -12,19 +14,80 @@ import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+
+import com.oneshoppoint.yates.yates.Interface.ServerCallback;
+import com.oneshoppoint.yates.yates.controllers.GetData;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.CardThumbnail;
 import it.gmariotti.cardslib.library.internal.base.BaseCard;
+import it.gmariotti.cardslib.library.view.CardGridView;
 
-public class getFeedback extends Activity {
+public class getFeedback extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_feedback);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle("Feedback");
+        getFeedBack();
     }
-  /*  public class GplayGridCard extends Card {
+
+    private void getFeedBack() {
+        GetData getData = new GetData(getBaseContext());
+        getData.online_data("feedback", null, null, new ServerCallback() {
+            @Override
+            public void onSuccess(String result) {
+                Log.e("String result", result);
+
+                try {
+                    ArrayList<Card> cards = new ArrayList<Card>();
+
+                    JSONObject res = new JSONObject(result);
+                    JSONArray data = res.getJSONArray("data");
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject item = data.getJSONObject(i);
+                        GplayGridCard feedback = new GplayGridCard(getBaseContext());
+                        feedback.name = item.getString("name");
+                        feedback.email = item.getString("email");
+                        feedback.phone = item.getString("phone");
+                        feedback.subject = item.getString("subject");
+                        feedback.feedback = item.getString("feedback");
+                        feedback.area = item.getString("area");
+                        feedback.setId(item.getString("id"));
+                        feedback.init();
+                        cards.add(feedback);
+
+                    }
+                    CardGridArrayAdapter mCardArrayAdapter = new CardGridArrayAdapter(getBaseContext(), cards);
+
+                    CardGridView listView = (CardGridView) findViewById(R.id.carddemo_grid_base1);
+                    if (listView != null) {
+                        listView.setAdapter(mCardArrayAdapter);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onSuccess(JSONObject response) {
+                Log.e("JSON result", response.toString());
+            }
+        });
+    }
+
+    public class GplayGridCard extends Card {
 
         protected String mTitle;
         protected TextView mSecondaryTitle;
@@ -35,7 +98,15 @@ public class getFeedback extends Activity {
 
         protected String headerTitle;
         protected String secondaryTitle;
-        protected float rating;
+
+        protected String name;
+        protected String id;
+        protected String email;
+        protected String phone;
+        protected String subject;
+        protected String area;
+        protected String feedback;
+        protected String feedback_date;
 
         public GplayGridCard(Context context) {
             super(context, R.layout.inner_content_detail_feedback);
@@ -56,51 +127,18 @@ public class getFeedback extends Activity {
                 public void onMenuItemClick(BaseCard card, MenuItem item) {
 //                    Toast.makeText(getContext(), "Item " + item.getTitle(), Toast.LENGTH_SHORT).show();
                     String selected = card.getId();
-                    Log.e("card id is",card.getId());
-                    ;
-                    Toast ToastMessage = Toast.makeText(getApplicationContext(), "No info for " + card.getTitle() + "!", Toast.LENGTH_SHORT);
-                    View toastView = ToastMessage.getView();
-                    toastView.setBackgroundResource(R.drawable.toast_background_color);
-                    ToastMessage.show();
+                    Log.e("card id is", card.getId());
 
-                    final TextView subtitle = (TextView) findViewById(R.id.carddemo_gplay_main_inner_subtitle);
+                   /* final TextView subtitle = (TextView) findViewById(R.id.carddemo_gplay_main_inner_subtitle);
                     if (item.getTitle().equals("Info")) {
-                        Intent intent = new Intent(getBaseContext(), PaybillDetail.class);
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
                         intent.putExtra("id", selected);
                         startActivity(intent);
-                    } else {
-                        if (verifyFavourite("favorite", getCardHeader().getTitle())) {
-                            MyShortcuts.showToast(getCardHeader().getTitle() + " added to my Favorites!", getBaseContext());
-                            Favorite favorite = new Favorite();
-                            favorite.setName(getCardHeader().getTitle());
-                            favorite.setEmail(getCardView().getCard().getId());
-                            favorite.setFavorite("true");
-                            favorite.setSent("true");
-                            favorite.setPaybill_number(subtitle.getText().toString());
-                            favorite.save();
-                        } else {
-                            MyShortcuts.showToast(getCardHeader().getTitle() + " is already on your favorite list", getBaseContext());
-                        }
-                    }
-//                    ID = card.getId();
+                    }*/
                 }
             });
 
             addCardHeader(header);
-//            Log.e("URL", url);
-
-
-//            NetworkImageView thumbnail1 =(NetworkImageView) getActivity().findViewById(R.id.card_thumbnail_image);
-//            thumbnail1.setImageUrl(url,imageLoader);
-//
-//            GplayGridThumb thumbnail = new GplayGridThumb(getContext());
-//            thumbnail.setUrlResource(url);
-//            if (resourceIdThumbnail > -1)
-//                thumbnail.setDrawableResource(resourceIdThumbnail);
-//            else
-//                thumbnail.setDrawableResource(R.drawable.ic_launcher);
-//            addCardThumbnail(thumbnail);
-
 
             OnCardClickListener clickListener = new OnCardClickListener() {
                 @Override
@@ -114,12 +152,7 @@ public class getFeedback extends Activity {
                 @Override
                 public void onClick(Card card, View view) {
 //                    Do something
-                    String selected= card.getId();
-                    Toast.makeText(getBaseContext(), "Item ID is" + selected, Toast.LENGTH_LONG).show();
-                    Intent intent =new Intent(getBaseContext(),ProductDetail.class);
-                    intent.putExtra("id",selected);
-                    intent.putExtra("product_name",card.getTitle());
-                    startActivity(intent);
+                    String selected = card.getId();
                 }
             });
 
@@ -129,26 +162,31 @@ public class getFeedback extends Activity {
         @Override
         public void setupInnerViewElements(ViewGroup parent, View view) {
 
-            TextView title = (TextView) view.findViewById(R.id.carddemo_gplay_main_inner_title);
-            title.setText(mTitle);
+           /* TextView title = (TextView) view.findViewById(R.id.name);
+            title.setText(name);*/
 
-            final TextView subtitle = (TextView) view.findViewById(R.id.carddemo_gplay_main_inner_subtitle);
-            subtitle.setText(secondaryTitle);
+            final TextView phone_no = (TextView) view.findViewById(R.id.phone);
+            phone_no.setText(phone);
+            final TextView address = (TextView) view.findViewById(R.id.email);
+            address.setText(email);
+            final TextView subject_title = (TextView) view.findViewById(R.id.subject);
+            subject_title.setText(subject);
+            final TextView feedback_ = (TextView) view.findViewById(R.id.feedback);
+            feedback_.setText(feedback);
+            final TextView area_ = (TextView) view.findViewById(R.id.area);
+            area_.setText(area);
+
+
 //            subtitle.setTextIsSelectable(true);
-            subtitle.setClickable(true);
-            subtitle.setOnClickListener(new View.OnClickListener() {
+            address.setClickable(true);
+            address.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                    cm.setText(subtitle.getText());
-//                    Toast.makeText(getContext(), "Copied to clipboard!", Toast.LENGTH_SHORT).show();
-                    MyShortcuts.showToast("Copied to clipboard!", getBaseContext());
-                    subtitle.getText();
+                    cm.setText(address.getText());
+
                 }
             });
-
-            final LikeButton likeButton = (LikeButton) view.findViewById(R.id.heart);
-            likeButton.setVisibility(View.INVISIBLE);
 
         }
 
@@ -166,6 +204,6 @@ public class getFeedback extends Activity {
             }
         }
 
-    }*/
+    }
 
 }
