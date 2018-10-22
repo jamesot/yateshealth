@@ -23,4 +23,5 @@
     <string name="helpmpesa">Pay with M-Pesa using the below paybill Number and enter the transactional code you receive</string>
     <string name="title_activity_prescription_web_view">Prescription</string>
     <string name="title_activity_get_feedback">getFeedback</string>
+    <string name="title_activity_post_feedback">postFeedback</string>
 </resources>

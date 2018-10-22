@@ -197,7 +197,7 @@ public class PrescriptionWebViewActivity extends AppCompatActivity {
         params.put("prescription_image", getStringImage(bitmap));
 
         PostData post = new PostData(getBaseContext());
-        post.post(baseURL() + "apipost", params, null, null, new ServerCallback() {
+        post.post( "apipost", params, null, null, new ServerCallback() {
             @Override
             public void onSuccess(String result) {
                 Log.e("string result", result);
