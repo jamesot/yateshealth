@@ -134,26 +134,27 @@ public class postFeedback extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-       /* if (id == R.id.home) {
+        if (id == R.id.get_prescription) {
             // Handle the camera action
-            Intent intent = new Intent(getBaseContext(), HomePage.class);
+            Intent intent = new Intent(getBaseContext(), PrescriptionWebViewActivity.class);
             startActivity(intent);
-        } else if (id == R.id.acceptance) {
-            Intent intent = new Intent(getBaseContext(), MainActivity.class);
-            startActivity(intent);
-
-        } else if (id == R.id.build) {
-            Intent intent = new Intent(getBaseContext(), BuildUp.class);
+        } else if (id == R.id.upload_prescription) {
+            Intent intent = new Intent(getBaseContext(), PrescriptionWebViewActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.dispatch) {
-            Intent intent = new Intent(getBaseContext(), Dispatch.class);
+        } else if (id == R.id.feedback) {
+            Intent intent = new Intent(getBaseContext(), getFeedback.class);
             startActivity(intent);
 
-        } else if (id == R.id.post) {
-            setURL();
+        } else if (id == R.id.post_feedback) {
+            Intent intent = new Intent(getBaseContext(), postFeedback.class);
+            startActivity(intent);
 
-        }*/
+        } else if (id == R.id.nearest_pharmacies) {
+           /* Intent intent = new Intent(getBaseContext(), .class);
+            startActivity(intent);*/
+
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

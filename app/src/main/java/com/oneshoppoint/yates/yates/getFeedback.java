@@ -2,8 +2,13 @@ package com.oneshoppoint.yates.yates;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.ClipboardManager;
@@ -31,7 +36,10 @@ import it.gmariotti.cardslib.library.internal.CardThumbnail;
 import it.gmariotti.cardslib.library.internal.base.BaseCard;
 import it.gmariotti.cardslib.library.view.CardGridView;
 
-public class getFeedback extends AppCompatActivity {
+import static com.oneshoppoint.yates.yates.utils.Utils.applyFontForToolbarTitle;
+
+public class getFeedback extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    protected Typeface mTfLight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,18 @@ public class getFeedback extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setTitle("Feedback");
         getFeedBack();
+
+        applyFontForToolbarTitle(this);
+        mTfLight = Typeface.createFromAsset(getAssets(), "OpenSans-Light.ttf");
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void getFeedBack() {
@@ -205,5 +225,46 @@ public class getFeedback extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.get_prescription) {
+            // Handle the camera action
+            Intent intent = new Intent(getBaseContext(), PrescriptionWebViewActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.upload_prescription) {
+            Intent intent = new Intent(getBaseContext(), PrescriptionWebViewActivity.class);
+            startActivity(intent);
+
+        } else if (id == R.id.feedback) {
+            Intent intent = new Intent(getBaseContext(), getFeedback.class);
+            startActivity(intent);
+
+        } else if (id == R.id.post_feedback) {
+            Intent intent = new Intent(getBaseContext(), postFeedback.class);
+            startActivity(intent);
+
+        } else if (id == R.id.nearest_pharmacies) {
+           /* Intent intent = new Intent(getBaseContext(), .class);
+            startActivity(intent);*/
+
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 
 }

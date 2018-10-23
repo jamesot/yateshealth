@@ -10,12 +10,17 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -46,7 +51,7 @@ import static com.oneshoppoint.yates.yates.utils.Utils.applyFontForToolbarTitle;
 import static com.oneshoppoint.yates.yates.utils.Utils.baseURL;
 import static com.oneshoppoint.yates.yates.utils.Utils.showToast;
 
-public class PrescriptionWebViewActivity extends AppCompatActivity {
+public class PrescriptionWebViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     protected Typeface mTfLight;
     ArrayList<String> items = new ArrayList<>();
     private EditText first_name, last_name, phone, email, medic_id;
@@ -154,23 +159,32 @@ public class PrescriptionWebViewActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });*/
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void webView() {
         new FinestWebView.Builder(this).theme(R.style.FinestWebViewTheme)
-                .titleDefault("Yates")
+                .titleDefault("Get Prescription | Yates Health")
                 .showUrl(false)
-                .statusBarColorRes(R.color.bluePrimaryDark)
-                .toolbarColorRes(R.color.bluePrimary)
+                .statusBarColorRes(R.color.yatesgreen)
+                .toolbarColorRes(R.color.yatesgreen)
                 .titleColorRes(R.color.finestWhite)
-                .urlColorRes(R.color.bluePrimaryLight)
+                .urlColorRes(R.color.yatesyellow)
                 .iconDefaultColorRes(R.color.finestWhite)
                 .progressBarColorRes(R.color.finestWhite)
                 .stringResCopiedToClipboard(R.string.copied_to_clipboard)
                 .stringResCopiedToClipboard(R.string.copied_to_clipboard)
                 .stringResCopiedToClipboard(R.string.copied_to_clipboard)
                 .showSwipeRefreshLayout(true)
-                .swipeRefreshColorRes(R.color.bluePrimaryDark)
+                .swipeRefreshColorRes(R.color.yatesgreen)
                 .menuSelector(R.drawable.selector_light_theme)
                 .menuTextGravity(Gravity.CENTER)
                 .menuTextPaddingRightRes(R.dimen.defaultMenuTextPaddingLeft)
@@ -197,7 +211,7 @@ public class PrescriptionWebViewActivity extends AppCompatActivity {
         params.put("prescription_image", getStringImage(bitmap));
 
         PostData post = new PostData(getBaseContext());
-        post.post( "apipost", params, null, null, new ServerCallback() {
+        post.post("apipost", params, null, null, new ServerCallback() {
             @Override
             public void onSuccess(String result) {
                 Log.e("string result", result);
@@ -271,6 +285,46 @@ public class PrescriptionWebViewActivity extends AppCompatActivity {
             Log.e("Bitmap", e.toString());
         }
         return encodedImage;
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.get_prescription) {
+            // Handle the camera action
+            Intent intent = new Intent(getBaseContext(), PrescriptionWebViewActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.upload_prescription) {
+            Intent intent = new Intent(getBaseContext(), PrescriptionWebViewActivity.class);
+            startActivity(intent);
+
+        } else if (id == R.id.feedback) {
+            Intent intent = new Intent(getBaseContext(), getFeedback.class);
+            startActivity(intent);
+
+        } else if (id == R.id.post_feedback) {
+            Intent intent = new Intent(getBaseContext(), postFeedback.class);
+            startActivity(intent);
+
+        } else if (id == R.id.nearest_pharmacies) {
+           /* Intent intent = new Intent(getBaseContext(), .class);
+            startActivity(intent);*/
+
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
 
