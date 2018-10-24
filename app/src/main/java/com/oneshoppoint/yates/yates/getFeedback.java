@@ -242,7 +242,7 @@ public class getFeedback extends AppCompatActivity implements NavigationView.OnN
 
         if (id == R.id.get_prescription) {
             // Handle the camera action
-            Intent intent = new Intent(getBaseContext(), PrescriptionWebViewActivity.class);
+            Intent intent = new Intent(getBaseContext(), GetWebPrescription.class);
             startActivity(intent);
         } else if (id == R.id.upload_prescription) {
             Intent intent = new Intent(getBaseContext(), PrescriptionWebViewActivity.class);
@@ -257,8 +257,8 @@ public class getFeedback extends AppCompatActivity implements NavigationView.OnN
             startActivity(intent);
 
         } else if (id == R.id.nearest_pharmacies) {
-           /* Intent intent = new Intent(getBaseContext(), .class);
-            startActivity(intent);*/
+            Intent intent = new Intent(getBaseContext(), NearestPharmacy.class);
+            startActivity(intent);
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

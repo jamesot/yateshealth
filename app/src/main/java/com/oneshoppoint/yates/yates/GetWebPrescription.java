@@ -11,36 +11,28 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 
-import com.oneshoppoint.yates.yates.Interface.ServerCallback;
-import com.oneshoppoint.yates.yates.controllers.PostData;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.thefinestartist.finestwebview.FinestWebView;
 
 import static com.oneshoppoint.yates.yates.utils.Utils.applyFontForToolbarTitle;
-import static com.oneshoppoint.yates.yates.utils.Utils.baseURL;
-import static com.oneshoppoint.yates.yates.utils.Utils.showToast;
 
-public class postFeedback extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    private EditText name, email, phone, subject, area, feedback, feedback_date;
+public class GetWebPrescription extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     protected Typeface mTfLight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_feedback);
+        setContentView(R.layout.activity_get_web_prescription);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Post feedback");
+
+        setTitle("Get prescription");
+
+        applyFontForToolbarTitle(this);
+        mTfLight = Typeface.createFromAsset(getAssets(), "OpenSans-Light.ttf");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -51,39 +43,7 @@ public class postFeedback extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        applyFontForToolbarTitle(this);
-        mTfLight = Typeface.createFromAsset(getAssets(), "OpenSans-Light.ttf");
-
-        name = (EditText) findViewById(R.id.first_name);
-        name.setTypeface(mTfLight);
-
-        subject = (EditText) findViewById(R.id.subject);
-        subject.setTypeface(mTfLight);
-
-        phone = (EditText) findViewById(R.id.phone_number);
-        phone.setTypeface(mTfLight);
-
-        email = (EditText) findViewById(R.id.email);
-        email.setTypeface(mTfLight);
-
-        area = (EditText) findViewById(R.id.area);
-        area.setTypeface(mTfLight);
-
-        feedback = (EditText) findViewById(R.id.feedback);
-        feedback.setTypeface(mTfLight);
-
-        feedback_date = (EditText) findViewById(R.id.feedback_date);
-        feedback_date.setTypeface(mTfLight);
-
-
-        Button submit = (Button) findViewById(R.id.btn_submit);
-        submit.setTypeface(mTfLight);
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadData();
-            }
-        });
+        webView();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -94,6 +54,29 @@ public class postFeedback extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+    private void webView() {
+        new FinestWebView.Builder(this).theme(R.style.FinestWebViewTheme)
+                .titleDefault("Get Prescription | Yates Health")
+                .showUrl(false)
+                .statusBarColorRes(R.color.yatesgreen)
+                .toolbarColorRes(R.color.yatesgreen)
+                .titleColorRes(R.color.finestWhite)
+                .urlColorRes(R.color.yatesyellow)
+                .iconDefaultColorRes(R.color.finestWhite)
+                .progressBarColorRes(R.color.finestWhite)
+                .stringResCopiedToClipboard(R.string.copied_to_clipboard)
+                .stringResCopiedToClipboard(R.string.copied_to_clipboard)
+                .stringResCopiedToClipboard(R.string.copied_to_clipboard)
+                .showSwipeRefreshLayout(true)
+                .swipeRefreshColorRes(R.color.yatesgreen)
+                .menuSelector(R.drawable.selector_light_theme)
+                .menuTextGravity(Gravity.CENTER)
+                .menuTextPaddingRightRes(R.dimen.defaultMenuTextPaddingLeft)
+                .dividerHeight(0)
+                .gradientDivider(false)
+                .setCustomAnimations(R.anim.slide_up, R.anim.hold, R.anim.hold, R.anim.slide_down)
+                .show("http://yatehealths.com/prescription.html");
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -102,33 +85,6 @@ public class postFeedback extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
-    }
-
-    private void uploadData() {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("name", name.getText().toString());
-        params.put("subject", subject.getText().toString());
-        params.put("email", email.getText().toString());
-        params.put("phone", phone.getText().toString());
-        params.put("area", area.getText().toString());
-        params.put("feedback", feedback.getText().toString());
-        params.put("feedback_date", feedback_date.getText().toString());
-
-
-        PostData post = new PostData(getBaseContext());
-        post.post( "feedback", params, null, null, new ServerCallback() {
-            @Override
-            public void onSuccess(String result) {
-                Log.e("string result", result);
-            }
-
-            @Override
-            public void onSuccess(JSONObject response) {
-                Log.e("json result", response.toString());
-
-            }
-        });
-
     }
 
     @Override

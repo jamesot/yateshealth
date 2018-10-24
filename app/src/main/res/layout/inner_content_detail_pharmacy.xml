@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:layout_marginLeft="3dp">
+
+
+    <TextView
+        android:id="@+id/zone"
+        android:layout_width="97dp"
+        android:layout_height="32dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="16dp"
+        android:text="zone"
+        android:textColor="@android:color/holo_green_light"
+        android:textSize="12sp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="195dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="11dp"
+        android:text="name"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="11dp" />
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="150dp"
+        android:layout_height="32dp"
+        android:textColor="#000"
+        android:textSize="12sp"
+        android:textAlignment="center"
+        android:text="distance"
+        android:layout_toRightOf="@+id/name"
+        android:layout_toEndOf="@+id/name" />
+
+    <TextView
+        android:id="@+id/paybill"
+        android:layout_width="145dp"
+        android:layout_height="32dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="43dp"
+        android:text="paybill"
+        android:textAlignment="center"
+        android:textColor="@android:color/holo_green_light"
+        android:textSize="12sp"
+        android:layout_alignParentLeft="true" />
+
+
+    <TextView
+        android:id="@+id/phone"
+        android:layout_width="100dp"
+        android:layout_height="31dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="129dp"
+        android:text="phone"
+        android:textAlignment="center"
+        android:textColor="@android:color/holo_green_light"
+        android:textSize="12sp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="129dp" />
+    <!--android:background="@drawable/carddemo_mayknow_add"-->
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="3dp"
+        android:text="email"
+        android:textColor="#000"
+        android:textSize="17sp"
+        android:layout_alignParentLeft="true" />
+
+
+
+</RelativeLayout>

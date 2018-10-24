@@ -67,11 +67,10 @@ public class PrescriptionWebViewActivity extends AppCompatActivity implements Na
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setTitle("Upload prescription");
 
         applyFontForToolbarTitle(this);
         mTfLight = Typeface.createFromAsset(getAssets(), "OpenSans-Light.ttf");
-
-        webView();
 
         first_name = (EditText) findViewById(R.id.first_name);
         first_name.setTypeface(mTfLight);
@@ -170,29 +169,6 @@ public class PrescriptionWebViewActivity extends AppCompatActivity implements Na
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void webView() {
-        new FinestWebView.Builder(this).theme(R.style.FinestWebViewTheme)
-                .titleDefault("Get Prescription | Yates Health")
-                .showUrl(false)
-                .statusBarColorRes(R.color.yatesgreen)
-                .toolbarColorRes(R.color.yatesgreen)
-                .titleColorRes(R.color.finestWhite)
-                .urlColorRes(R.color.yatesyellow)
-                .iconDefaultColorRes(R.color.finestWhite)
-                .progressBarColorRes(R.color.finestWhite)
-                .stringResCopiedToClipboard(R.string.copied_to_clipboard)
-                .stringResCopiedToClipboard(R.string.copied_to_clipboard)
-                .stringResCopiedToClipboard(R.string.copied_to_clipboard)
-                .showSwipeRefreshLayout(true)
-                .swipeRefreshColorRes(R.color.yatesgreen)
-                .menuSelector(R.drawable.selector_light_theme)
-                .menuTextGravity(Gravity.CENTER)
-                .menuTextPaddingRightRes(R.dimen.defaultMenuTextPaddingLeft)
-                .dividerHeight(0)
-                .gradientDivider(false)
-                .setCustomAnimations(R.anim.slide_up, R.anim.hold, R.anim.hold, R.anim.slide_down)
-                .show("http://yatehealths.com/prescription.html");
-    }
 
     private void uploadData() {
 
@@ -303,7 +279,7 @@ public class PrescriptionWebViewActivity extends AppCompatActivity implements Na
 
         if (id == R.id.get_prescription) {
             // Handle the camera action
-            Intent intent = new Intent(getBaseContext(), PrescriptionWebViewActivity.class);
+            Intent intent = new Intent(getBaseContext(), GetWebPrescription.class);
             startActivity(intent);
         } else if (id == R.id.upload_prescription) {
             Intent intent = new Intent(getBaseContext(), PrescriptionWebViewActivity.class);
@@ -318,8 +294,8 @@ public class PrescriptionWebViewActivity extends AppCompatActivity implements Na
             startActivity(intent);
 
         } else if (id == R.id.nearest_pharmacies) {
-           /* Intent intent = new Intent(getBaseContext(), .class);
-            startActivity(intent);*/
+            Intent intent = new Intent(getBaseContext(), NearestPharmacy.class);
+            startActivity(intent);
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

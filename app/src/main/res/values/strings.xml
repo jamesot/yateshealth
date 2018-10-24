@@ -24,4 +24,6 @@
     <string name="title_activity_prescription_web_view">Prescription</string>
     <string name="title_activity_get_feedback">getFeedback</string>
     <string name="title_activity_post_feedback">postFeedback</string>
+    <string name="title_activity_nearest_pharmacy">NearestPharmacy</string>
+    <string name="title_activity_get_web_prescription">GetWebPrescription</string>
 </resources>
